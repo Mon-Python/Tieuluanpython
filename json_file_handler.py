@@ -8,7 +8,7 @@ API (đã chốt):
     write(path, data)        ghi file tạm rồi os.replace -> không bao giờ để file nửa vời
     backup(path)             copy vào thư mục backup kèm timestamp, trả về đường dẫn
     restore(backup, target)  kiểm tra bản backup hợp lệ, backup bản hiện tại, rồi ghi đè
-    list_backups()           danh sách backup, mới nhất trước
+    list_backups(stem=None)  danh sách backup (lọc theo tên file nếu có), mới nhất trước
 
 Mọi lỗi (JSON hỏng, không có quyền...) đều ném JsonFileError - kế thừa ValueError
 nên GUI chỉ cần bắt ValueError là đủ.
@@ -138,9 +138,13 @@ class JsonFileHandler:
             self.backup(target)
         self.write(target, data)
 
-    def list_backups(self) -> list:
-        """Danh sách file backup, mới nhất trước (dùng cho Menu > Khôi phục)."""
+    def list_backups(self, stem: Optional[str] = None) -> list:
+        """
+        Danh sách file backup, mới nhất trước (dùng cho Menu > Khôi phục).
+        stem="questions" -> chỉ backup của questions.json, tránh khôi phục nhầm sang file khác.
+        """
         if not self.backup_dir.exists():
             return []
-        files = [f for f in self.backup_dir.iterdir() if f.is_file()]
+        files = [f for f in self.backup_dir.iterdir()
+                 if f.is_file() and (stem is None or f.name.startswith(stem + "_"))]
         return sorted(files, key=lambda f: (f.stat().st_mtime_ns, f.name), reverse=True)
