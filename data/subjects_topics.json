@@ -1,0 +1,24 @@
+{
+  "subjects": [
+    {
+      "id": "subj_e031b52f",
+      "name": "Lập trình Python",
+      "description": "Môn học cơ sở ngành CNTT",
+      "created_at": "2026-10-21T19:26:26.983580"
+    }
+  ],
+  "topics": [
+    {
+      "id": "topic_91114da8",
+      "subject_id": "subj_e031b52f",
+      "name": "Cú pháp & Biến",
+      "created_at": "2026-10-21T19:26:26.983949"
+    },
+    {
+      "id": "topic_4b72db2e",
+      "subject_id": "subj_e031b52f",
+      "name": "Vòng lặp & Cấu trúc rẽ nhánh",
+      "created_at": "2026-10-21T19:26:26.983956"
+    }
+  ]
+}
