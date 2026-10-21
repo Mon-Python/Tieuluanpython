@@ -135,6 +135,16 @@ class Subject(BaseEntity):
     def create(name: str, description: str = "") -> "Subject":
         return Subject(id=generate_id("subj"), name=name, description=description)
 
+    def to_dict(self) -> dict:
+        return {"id": self.id, "name": self.name, "description": self.description,
+                "created_at": _dt_to_str(self.created_at)}
+
+    @staticmethod
+    def from_dict(d: dict) -> "Subject":
+        return Subject(id=d["id"], name=d.get("name", ""),
+                       description=d.get("description", ""),
+                       created_at=_str_to_dt(d.get("created_at")))
+
 
 @dataclass
 class Topic(BaseEntity):
@@ -145,6 +155,16 @@ class Topic(BaseEntity):
     @staticmethod
     def create(subject_id: str, name: str) -> "Topic":
         return Topic(id=generate_id("topic"), subject_id=subject_id, name=name)
+
+    def to_dict(self) -> dict:
+        return {"id": self.id, "subject_id": self.subject_id, "name": self.name,
+                "created_at": _dt_to_str(self.created_at)}
+
+    @staticmethod
+    def from_dict(d: dict) -> "Topic":
+        return Topic(id=d["id"], subject_id=d.get("subject_id", ""),
+                     name=d.get("name", ""),
+                     created_at=_str_to_dt(d.get("created_at")))
 
 
 @dataclass
@@ -157,6 +177,14 @@ class Option:
     @staticmethod
     def create(content: str, is_correct: bool = False) -> "Option":
         return Option(id=generate_id("opt"), content=content, is_correct=is_correct)
+
+    def to_dict(self) -> dict:
+        return {"id": self.id, "content": self.content, "is_correct": self.is_correct}
+
+    @staticmethod
+    def from_dict(d: dict) -> "Option":
+        return Option(id=d["id"], content=d.get("content", ""),
+                      is_correct=d.get("is_correct", False))
 
 
 @dataclass
@@ -200,6 +228,20 @@ class Question(BaseEntity):
         if correct_count > 1:
             return False, "Câu hỏi chỉ được có đúng 1 đáp án đúng (single choice)"
         return True, "OK"
+
+    def to_dict(self) -> dict:
+        return {"id": self.id, "topic_id": self.topic_id, "content": self.content,
+                "difficulty": self.difficulty.value,
+                "options": [o.to_dict() for o in self.options],
+                "created_at": _dt_to_str(self.created_at)}
+
+    @staticmethod
+    def from_dict(d: dict) -> "Question":
+        return Question(id=d["id"], topic_id=d.get("topic_id", ""),
+                        content=d.get("content", ""),
+                        difficulty=DifficultyLevel(d.get("difficulty", "de")),
+                        options=[Option.from_dict(o) for o in d.get("options", [])],
+                        created_at=_str_to_dt(d.get("created_at")))
 
 
 @dataclass

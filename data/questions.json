@@ -1,0 +1,350 @@
+[
+  {
+    "id": "q_25f451d8",
+    "topic_id": "topic_91114da8",
+    "content": "Hàm nào dùng để in dữ liệu ra màn hình trong Python?",
+    "difficulty": "de",
+    "options": [
+      {
+        "id": "opt_63c23d0f",
+        "content": "print()",
+        "is_correct": true
+      },
+      {
+        "id": "opt_69303a28",
+        "content": "echo()",
+        "is_correct": false
+      },
+      {
+        "id": "opt_4e6362a8",
+        "content": "printf()",
+        "is_correct": false
+      },
+      {
+        "id": "opt_692836f6",
+        "content": "cout",
+        "is_correct": false
+      }
+    ],
+    "created_at": "2026-10-21T19:26:26.985096"
+  },
+  {
+    "id": "q_1a07802a",
+    "topic_id": "topic_91114da8",
+    "content": "Kiểu dữ liệu của số 3.14 trong Python là gì?",
+    "difficulty": "de",
+    "options": [
+      {
+        "id": "opt_56233c97",
+        "content": "float",
+        "is_correct": true
+      },
+      {
+        "id": "opt_4770cd3d",
+        "content": "int",
+        "is_correct": false
+      },
+      {
+        "id": "opt_1e037aed",
+        "content": "double",
+        "is_correct": false
+      },
+      {
+        "id": "opt_f472bee4",
+        "content": "decimal",
+        "is_correct": false
+      }
+    ],
+    "created_at": "2026-10-21T19:26:26.985575"
+  },
+  {
+    "id": "q_1f1fa12a",
+    "topic_id": "topic_91114da8",
+    "content": "Quy tắc đặt tên biến nào sau đây là HỢP LỆ?",
+    "difficulty": "de",
+    "options": [
+      {
+        "id": "opt_0f9dcb4f",
+        "content": "my_variable",
+        "is_correct": true
+      },
+      {
+        "id": "opt_d42ef297",
+        "content": "2nd_variable",
+        "is_correct": false
+      },
+      {
+        "id": "opt_c6df4754",
+        "content": "my-var",
+        "is_correct": false
+      },
+      {
+        "id": "opt_8bbb1bcb",
+        "content": "global",
+        "is_correct": false
+      }
+    ],
+    "created_at": "2026-10-21T19:26:26.986108"
+  },
+  {
+    "id": "q_6db5b8fe",
+    "topic_id": "topic_91114da8",
+    "content": "Phương thức nào dùng để chuyển chuỗi thành số nguyên?",
+    "difficulty": "de",
+    "options": [
+      {
+        "id": "opt_8a3bd78e",
+        "content": "int()",
+        "is_correct": true
+      },
+      {
+        "id": "opt_99e2172d",
+        "content": "str()",
+        "is_correct": false
+      },
+      {
+        "id": "opt_1b7802d4",
+        "content": "parse()",
+        "is_correct": false
+      },
+      {
+        "id": "opt_f528b422",
+        "content": "to_int()",
+        "is_correct": false
+      }
+    ],
+    "created_at": "2026-10-21T19:26:26.986626"
+  },
+  {
+    "id": "q_2cfce5ee",
+    "topic_id": "topic_91114da8",
+    "content": "Kết quả của biểu thức 10 // 3 trong Python là bao nhiêu?",
+    "difficulty": "kho",
+    "options": [
+      {
+        "id": "opt_08b3fb09",
+        "content": "3",
+        "is_correct": true
+      },
+      {
+        "id": "opt_2240f4d7",
+        "content": "3.33",
+        "is_correct": false
+      },
+      {
+        "id": "opt_2eb7630a",
+        "content": "3.0",
+        "is_correct": false
+      },
+      {
+        "id": "opt_85fe40d7",
+        "content": "1",
+        "is_correct": false
+      }
+    ],
+    "created_at": "2026-10-21T19:26:26.987126"
+  },
+  {
+    "id": "q_ad09c08f",
+    "topic_id": "topic_91114da8",
+    "content": "Toán tử lũy thừa trong Python được ký hiệu là gì?",
+    "difficulty": "kho",
+    "options": [
+      {
+        "id": "opt_8deedaa9",
+        "content": "**",
+        "is_correct": true
+      },
+      {
+        "id": "opt_acd1ec6b",
+        "content": "^",
+        "is_correct": false
+      },
+      {
+        "id": "opt_99d0c5cb",
+        "content": "pow",
+        "is_correct": false
+      },
+      {
+        "id": "opt_285093c6",
+        "content": "//",
+        "is_correct": false
+      }
+    ],
+    "created_at": "2026-10-21T19:26:26.987597"
+  },
+  {
+    "id": "q_edb11e88",
+    "topic_id": "topic_4b72db2e",
+    "content": "Từ khóa nào dùng để thoát khỏi vòng lặp ngay lập tức?",
+    "difficulty": "de",
+    "options": [
+      {
+        "id": "opt_41cb621c",
+        "content": "break",
+        "is_correct": true
+      },
+      {
+        "id": "opt_fc201fc2",
+        "content": "continue",
+        "is_correct": false
+      },
+      {
+        "id": "opt_8e161b68",
+        "content": "exit",
+        "is_correct": false
+      },
+      {
+        "id": "opt_24ccdbaa",
+        "content": "pass",
+        "is_correct": false
+      }
+    ],
+    "created_at": "2026-10-21T19:26:26.988152"
+  },
+  {
+    "id": "q_98e86d0f",
+    "topic_id": "topic_4b72db2e",
+    "content": "Từ khóa nào dùng để bỏ qua lần lặp hiện tại và chuyển sang lần lặp kế tiếp?",
+    "difficulty": "de",
+    "options": [
+      {
+        "id": "opt_bf90e691",
+        "content": "continue",
+        "is_correct": true
+      },
+      {
+        "id": "opt_9c5f630f",
+        "content": "skip",
+        "is_correct": false
+      },
+      {
+        "id": "opt_6824a6db",
+        "content": "next",
+        "is_correct": false
+      },
+      {
+        "id": "opt_9d983c53",
+        "content": "pass",
+        "is_correct": false
+      }
+    ],
+    "created_at": "2026-10-21T19:26:26.988950"
+  },
+  {
+    "id": "q_d96ab61c",
+    "topic_id": "topic_4b72db2e",
+    "content": "Cấu trúc rẽ nhánh 'nếu... thì' trong Python dùng từ khóa nào?",
+    "difficulty": "de",
+    "options": [
+      {
+        "id": "opt_752a72e2",
+        "content": "if - elif - else",
+        "is_correct": true
+      },
+      {
+        "id": "opt_d5fff7ce",
+        "content": "if - then - else",
+        "is_correct": false
+      },
+      {
+        "id": "opt_a444f2f5",
+        "content": "switch - case",
+        "is_correct": false
+      },
+      {
+        "id": "opt_d3181552",
+        "content": "choose - when",
+        "is_correct": false
+      }
+    ],
+    "created_at": "2026-10-21T19:26:26.990265"
+  },
+  {
+    "id": "q_adc3d9cd",
+    "topic_id": "topic_4b72db2e",
+    "content": "Hàm range(1, 5) sẽ sinh ra dãy số nào?",
+    "difficulty": "de",
+    "options": [
+      {
+        "id": "opt_905219a2",
+        "content": "1, 2, 3, 4",
+        "is_correct": true
+      },
+      {
+        "id": "opt_22b6e192",
+        "content": "1, 2, 3, 4, 5",
+        "is_correct": false
+      },
+      {
+        "id": "opt_14c8c9e6",
+        "content": "0, 1, 2, 3, 4",
+        "is_correct": false
+      },
+      {
+        "id": "opt_a1cfe971",
+        "content": "2, 3, 4, 5",
+        "is_correct": false
+      }
+    ],
+    "created_at": "2026-10-21T19:26:26.991065"
+  },
+  {
+    "id": "q_33f9767f",
+    "topic_id": "topic_4b72db2e",
+    "content": "Khối lệnh 'else' gắn liền với vòng lặp 'while' sẽ được thực thi khi nào?",
+    "difficulty": "kho",
+    "options": [
+      {
+        "id": "opt_414f3e7f",
+        "content": "Khi điều kiện while trở thành False bình thường (không bị break)",
+        "is_correct": true
+      },
+      {
+        "id": "opt_df700951",
+        "content": "Khi vòng lặp gặp lệnh break",
+        "is_correct": false
+      },
+      {
+        "id": "opt_f6bb83e9",
+        "content": "Luôn luôn thực thi trước vòng lặp",
+        "is_correct": false
+      },
+      {
+        "id": "opt_0fa9f3bf",
+        "content": "Chỉ thực thi khi vòng lặp xảy ra lỗi",
+        "is_correct": false
+      }
+    ],
+    "created_at": "2026-10-21T19:26:26.991855"
+  },
+  {
+    "id": "q_fdabbe5e",
+    "topic_id": "topic_4b72db2e",
+    "content": "Đoạn mã: for i in range(3): pass; print(i) sẽ in ra giá trị gì?",
+    "difficulty": "kho",
+    "options": [
+      {
+        "id": "opt_4cf83339",
+        "content": "2",
+        "is_correct": true
+      },
+      {
+        "id": "opt_efae2319",
+        "content": "3",
+        "is_correct": false
+      },
+      {
+        "id": "opt_f5743456",
+        "content": "Lỗi biến i không tồn tại",
+        "is_correct": false
+      },
+      {
+        "id": "opt_e0145355",
+        "content": "0",
+        "is_correct": false
+      }
+    ],
+    "created_at": "2026-10-21T19:26:26.992751"
+  }
+]
