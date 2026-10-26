@@ -1,0 +1,20 @@
+[
+  {
+    "id": "user_b4f4db1f",
+    "username": "admin",
+    "password_hash": "0e9fd0a6458082c79debc3ee888b560898c2c71b011baa71b4d169f029a57956",
+    "salt": "9f4ddb5eecd87ba5fa5decd6d933ea3b",
+    "role": "admin",
+    "email": "admin@school.edu.vn",
+    "created_at": "2026-10-26T19:35:30.974715"
+  },
+  {
+    "id": "user_3c4d3a05",
+    "username": "student",
+    "password_hash": "f05c274d60dcbb8a182c24ef91c24876f444316fb4929870b03692327a1f6023",
+    "salt": "c095d5ed7bef5280f70f0ea7b0aa861b",
+    "role": "user",
+    "email": "student@school.edu.vn",
+    "created_at": "2026-10-26T19:35:31.001573"
+  }
+]

@@ -1,0 +1,12 @@
+# FILE MẪU CÂU HỎI TRẮC NGHIỆM (mau_cau_hoi.txt)
+# Định dạng: topic_id|Nội dung câu hỏi|Mức độ (de/kho)|Phương án A|Phương án B|Phương án C|Phương án D|Đáp án đúng (A/B/C/D)
+# Các dòng bắt đầu bằng '#' hoặc dòng trống sẽ được tự động bỏ qua.
+
+topic_01|Từ khóa nào dùng để định nghĩa hàm trong Python?|de|def|function|fun|define|A
+topic_01|Cấu trúc dữ liệu nào trong Python là bất biến (immutable)?|de|list|tuple|dict|set|B
+topic_01|Toán tử nào dùng để tính lũy thừa trong Python?|de|^|**|pow|exp|B
+topic_01|Phương thức nào dùng để thêm một phần tử vào cuối danh sách (list)?|de|insert|push|append|extend|C
+topic_01|Kết quả của biểu thức bool([]) trong Python là gì?|de|True|False|None|Lỗi TypeError|B
+topic_02|Độ phức tạp thời gian trung bình khi tìm kiếm trong dict là gì?|kho|O(1)|O(n)|O(log n)|O(n log n)|A
+topic_02|Decorators trong Python hoạt động dựa trên cơ chế nào?|kho|Higher-order functions|Multiple inheritance|Metaclass|Garbage collection|A
+topic_02|Biểu thức generator khác list comprehension ở điểm mấu chốt nào?|kho|Dùng ít bộ nhớ hơn nhờ tính toán lazy|Luôn chạy nhanh hơn|Có thể lập chỉ mục index|Cho phép thay đổi kích thước|A
