@@ -48,6 +48,8 @@ class FileExamExporter(ExamExporter):
     def _prepare_output_path(file_path: str) -> Path:
         EXPORT_DIR.mkdir(parents=True, exist_ok=True)
         output_path = Path(file_path)
+        if not output_path.is_absolute():
+            output_path = EXPORT_DIR / output_path
         output_path.parent.mkdir(parents=True, exist_ok=True)
         return output_path
 
@@ -94,5 +96,3 @@ class FileExamExporter(ExamExporter):
 
         output_path = self._prepare_output_path(file_path)
         output_path.write_text("\n".join(lines), encoding="utf-8")
-
-
