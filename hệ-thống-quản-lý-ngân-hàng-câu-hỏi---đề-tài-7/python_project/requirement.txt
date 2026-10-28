@@ -1,5 +1,0 @@
-# Python >= 3.9 (code dùng list[...] / tuple[...] làm kiểu)
-requests>=2.31        # B: api_import.py
-tkcalendar>=1.6.1     # B: chỉ cần nếu dùng DateEntry
-pyinstaller>=6.0      # D: đóng gói build.bat
-pytest>=7.0           # tùy chọn: chạy test (unittest có sẵn vẫn chạy được)

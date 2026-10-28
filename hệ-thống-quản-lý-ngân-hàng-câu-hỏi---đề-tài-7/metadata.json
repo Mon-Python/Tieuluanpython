@@ -1,7 +1,0 @@
-{
-  "name": "Hệ Thống Quản Lý Ngân Hàng Câu Hỏi - Đề Tài 7",
-  "description": "Hệ thống quản lý ngân hàng câu hỏi, xác thực tài khoản, kiểm tra dữ liệu Regex, nhập file/API, quản lý môn học - chủ đề theo phân công Thành viên B.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
-}
-
