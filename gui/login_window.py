@@ -191,7 +191,7 @@ class LoginWindow(tk.Tk):
 
     def on_login(self):
         username = self.ent_user.get().strip()
-        password = self.ent_pass.get().strip()
+        password = self.ent_pass.get()
         try:
             user = self.auth_mgr.login(username, password)
             self.logged_in_user = user

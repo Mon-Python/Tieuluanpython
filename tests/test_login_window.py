@@ -25,8 +25,12 @@ class TestLoginRegistrationWindow(unittest.TestCase):
             self.skipTest(f"Tk display is unavailable: {error}")
 
     def tearDown(self):
-        if hasattr(self, "window") and self.window.winfo_exists():
-            self.window.destroy()
+        if hasattr(self, "window"):
+            try:
+                if self.window.winfo_exists():
+                    self.window.destroy()
+            except tk.TclError:
+                pass
         if hasattr(self, "temp_dir"):
             self.temp_dir.cleanup()
 
@@ -48,6 +52,16 @@ class TestLoginRegistrationWindow(unittest.TestCase):
                 buttons.append(widget.cget("text"))
             pending.extend(widget.winfo_children())
         self.assertIn("Đăng kí", buttons)
+
+    def test_login_preserves_spaces_in_password(self):
+        password = "secure-password "
+        self.auth_manager.register("student_space", password)
+        self.window.ent_user.insert(0, "student_space")
+        self.window.ent_pass.insert(0, password)
+
+        self.window.on_login()
+
+        self.assertEqual(self.window.logged_in_user.username, "student_space")
 
     @patch("gui.login_window.messagebox.showinfo")
     def test_student_registration_returns_to_login_and_role_is_persisted(self, show_info):

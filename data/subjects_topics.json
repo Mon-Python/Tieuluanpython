@@ -5,6 +5,12 @@
       "name": "Lập trình Python",
       "description": "Môn học cơ sở ngành CNTT",
       "created_at": "2026-10-21T19:26:26.983580"
+    },
+    {
+      "id": "subj_fce63aa5",
+      "name": "Kinh tế vi mô",
+      "description": "",
+      "created_at": "2026-10-31T20:46:33.260469"
     }
   ],
   "topics": [
@@ -19,6 +25,30 @@
       "subject_id": "subj_e031b52f",
       "name": "Vòng lặp & Cấu trúc rẽ nhánh",
       "created_at": "2026-10-21T19:26:26.983956"
+    },
+    {
+      "id": "topic_d0274965",
+      "subject_id": "subj_e031b52f",
+      "name": "Kiểu dữ liệu cơ bản",
+      "created_at": "2026-10-31T20:46:33.260418"
+    },
+    {
+      "id": "topic_a5ddb5f7",
+      "subject_id": "subj_e031b52f",
+      "name": "Điều khiển luồng",
+      "created_at": "2026-10-31T20:46:33.260458"
+    },
+    {
+      "id": "topic_273c0b2b",
+      "subject_id": "subj_fce63aa5",
+      "name": "Cung và cầu",
+      "created_at": "2026-10-31T20:46:33.260476"
+    },
+    {
+      "id": "topic_4a34d900",
+      "subject_id": "subj_fce63aa5",
+      "name": "Chi phí và lựa chọn",
+      "created_at": "2026-10-31T20:46:33.260483"
     }
   ]
 }

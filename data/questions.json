@@ -346,5 +346,469 @@
       }
     ],
     "created_at": "2026-10-21T19:26:26.992751"
+  },
+  {
+    "id": "q_a7c3c2ef",
+    "topic_id": "topic_d0274965",
+    "content": "Kiểu dữ liệu nào phù hợp để lưu nhiều phần tử có thứ tự?",
+    "difficulty": "de",
+    "options": [
+      {
+        "id": "opt_0b7bb6ca",
+        "content": "int",
+        "is_correct": false
+      },
+      {
+        "id": "opt_3cce02aa",
+        "content": "float",
+        "is_correct": false
+      },
+      {
+        "id": "opt_4ebdce21",
+        "content": "list",
+        "is_correct": true
+      },
+      {
+        "id": "opt_98950784",
+        "content": "bool",
+        "is_correct": false
+      }
+    ],
+    "created_at": "2026-10-31T20:46:33.260576"
+  },
+  {
+    "id": "q_1adba2f4",
+    "topic_id": "topic_d0274965",
+    "content": "Kết quả của len({'a': 1, 'b': 2}) là gì?",
+    "difficulty": "kho",
+    "options": [
+      {
+        "id": "opt_4dd8ed8f",
+        "content": "2",
+        "is_correct": true
+      },
+      {
+        "id": "opt_43148a41",
+        "content": "Lỗi TypeError",
+        "is_correct": false
+      },
+      {
+        "id": "opt_9855303e",
+        "content": "1",
+        "is_correct": false
+      },
+      {
+        "id": "opt_00749018",
+        "content": "3",
+        "is_correct": false
+      }
+    ],
+    "created_at": "2026-10-31T20:46:33.260610"
+  },
+  {
+    "id": "q_1ecf02c8",
+    "topic_id": "topic_d0274965",
+    "content": "Giá trị nào sau đây có kiểu bool?",
+    "difficulty": "de",
+    "options": [
+      {
+        "id": "opt_f91db819",
+        "content": "True",
+        "is_correct": true
+      },
+      {
+        "id": "opt_5b5bdb7d",
+        "content": "1.0",
+        "is_correct": false
+      },
+      {
+        "id": "opt_76840cf0",
+        "content": "None",
+        "is_correct": false
+      },
+      {
+        "id": "opt_18268997",
+        "content": "'True'",
+        "is_correct": false
+      }
+    ],
+    "created_at": "2026-10-31T20:46:33.260636"
+  },
+  {
+    "id": "q_3bd2b57c",
+    "topic_id": "topic_d0274965",
+    "content": "Kiểu dữ liệu nào biểu diễn số nguyên trong Python?",
+    "difficulty": "de",
+    "options": [
+      {
+        "id": "opt_e5f06496",
+        "content": "list",
+        "is_correct": false
+      },
+      {
+        "id": "opt_4ae86fb1",
+        "content": "dict",
+        "is_correct": false
+      },
+      {
+        "id": "opt_2770ec20",
+        "content": "str",
+        "is_correct": false
+      },
+      {
+        "id": "opt_05bffa87",
+        "content": "int",
+        "is_correct": true
+      }
+    ],
+    "created_at": "2026-10-31T20:46:33.260659"
+  },
+  {
+    "id": "q_3d77cd0e",
+    "topic_id": "topic_a5ddb5f7",
+    "content": "Trong vòng lặp, continue thực hiện điều gì?",
+    "difficulty": "kho",
+    "options": [
+      {
+        "id": "opt_c1226e12",
+        "content": "Bỏ qua phần còn lại của lượt hiện tại",
+        "is_correct": true
+      },
+      {
+        "id": "opt_7599ff23",
+        "content": "Khởi tạo lại biến vòng lặp",
+        "is_correct": false
+      },
+      {
+        "id": "opt_dffa925f",
+        "content": "Kết thúc toàn bộ chương trình",
+        "is_correct": false
+      },
+      {
+        "id": "opt_4be07684",
+        "content": "Thoát khỏi vòng lặp",
+        "is_correct": false
+      }
+    ],
+    "created_at": "2026-10-31T20:46:33.260709"
+  },
+  {
+    "id": "q_6dd29cb1",
+    "topic_id": "topic_a5ddb5f7",
+    "content": "Từ khóa nào kết thúc vòng lặp ngay lập tức?",
+    "difficulty": "de",
+    "options": [
+      {
+        "id": "opt_2c2303dc",
+        "content": "continue",
+        "is_correct": false
+      },
+      {
+        "id": "opt_7cf4b9b5",
+        "content": "break",
+        "is_correct": true
+      },
+      {
+        "id": "opt_7bbcc857",
+        "content": "pass",
+        "is_correct": false
+      },
+      {
+        "id": "opt_b1d1340f",
+        "content": "return",
+        "is_correct": false
+      }
+    ],
+    "created_at": "2026-10-31T20:46:33.260736"
+  },
+  {
+    "id": "q_9bf3ed1b",
+    "topic_id": "topic_a5ddb5f7",
+    "content": "Từ khóa nào bắt đầu một nhánh điều kiện trong Python?",
+    "difficulty": "de",
+    "options": [
+      {
+        "id": "opt_d93943da",
+        "content": "for",
+        "is_correct": false
+      },
+      {
+        "id": "opt_26dd9163",
+        "content": "def",
+        "is_correct": false
+      },
+      {
+        "id": "opt_fec9d06b",
+        "content": "import",
+        "is_correct": false
+      },
+      {
+        "id": "opt_1a25bc65",
+        "content": "if",
+        "is_correct": true
+      }
+    ],
+    "created_at": "2026-10-31T20:46:33.260759"
+  },
+  {
+    "id": "q_724e68ae",
+    "topic_id": "topic_a5ddb5f7",
+    "content": "Vòng lặp nào thường dùng để duyệt từng phần tử của danh sách?",
+    "difficulty": "de",
+    "options": [
+      {
+        "id": "opt_d16cf27a",
+        "content": "for",
+        "is_correct": true
+      },
+      {
+        "id": "opt_51d5818e",
+        "content": "class",
+        "is_correct": false
+      },
+      {
+        "id": "opt_d93fa409",
+        "content": "with",
+        "is_correct": false
+      },
+      {
+        "id": "opt_b2696a19",
+        "content": "try",
+        "is_correct": false
+      }
+    ],
+    "created_at": "2026-10-31T20:46:33.260780"
+  },
+  {
+    "id": "q_0e040807",
+    "topic_id": "topic_273c0b2b",
+    "content": "Theo quy luật cầu, khi giá tăng thì lượng cầu thường thế nào?",
+    "difficulty": "de",
+    "options": [
+      {
+        "id": "opt_903348e1",
+        "content": "Không đổi trong mọi trường hợp",
+        "is_correct": false
+      },
+      {
+        "id": "opt_9507fd14",
+        "content": "Tăng",
+        "is_correct": false
+      },
+      {
+        "id": "opt_5a6090ee",
+        "content": "Bằng không",
+        "is_correct": false
+      },
+      {
+        "id": "opt_dd3ae4b1",
+        "content": "Giảm",
+        "is_correct": true
+      }
+    ],
+    "created_at": "2026-10-31T20:46:33.260824"
+  },
+  {
+    "id": "q_ec46e7ad",
+    "topic_id": "topic_273c0b2b",
+    "content": "Nếu cầu tăng còn cung không đổi, giá cân bằng thường thay đổi ra sao?",
+    "difficulty": "kho",
+    "options": [
+      {
+        "id": "opt_9e81c9b0",
+        "content": "Không đổi chắc chắn",
+        "is_correct": false
+      },
+      {
+        "id": "opt_0f910f73",
+        "content": "Bằng không",
+        "is_correct": false
+      },
+      {
+        "id": "opt_ad0d5008",
+        "content": "Tăng",
+        "is_correct": true
+      },
+      {
+        "id": "opt_d052c5d3",
+        "content": "Giảm",
+        "is_correct": false
+      }
+    ],
+    "created_at": "2026-10-31T20:46:33.260852"
+  },
+  {
+    "id": "q_68f7eb9b",
+    "topic_id": "topic_273c0b2b",
+    "content": "Đường cung thường dốc lên vì giá cao hơn khuyến khích điều gì?",
+    "difficulty": "de",
+    "options": [
+      {
+        "id": "opt_f3341f33",
+        "content": "Giảm chi phí cố định",
+        "is_correct": false
+      },
+      {
+        "id": "opt_9d818b8d",
+        "content": "Tăng lượng cung",
+        "is_correct": true
+      },
+      {
+        "id": "opt_7edccbe4",
+        "content": "Xóa bỏ khan hiếm",
+        "is_correct": false
+      },
+      {
+        "id": "opt_32ac5525",
+        "content": "Giảm nhu cầu",
+        "is_correct": false
+      }
+    ],
+    "created_at": "2026-10-31T20:46:33.260875"
+  },
+  {
+    "id": "q_cc71c788",
+    "topic_id": "topic_273c0b2b",
+    "content": "Một yếu tố nào có thể làm đường cung dịch chuyển sang phải?",
+    "difficulty": "kho",
+    "options": [
+      {
+        "id": "opt_9622c3b0",
+        "content": "Số nhà sản xuất giảm",
+        "is_correct": false
+      },
+      {
+        "id": "opt_81b4202b",
+        "content": "Chi phí đầu vào tăng",
+        "is_correct": false
+      },
+      {
+        "id": "opt_2a6cc7ba",
+        "content": "Thuế sản xuất tăng",
+        "is_correct": false
+      },
+      {
+        "id": "opt_ef5cd628",
+        "content": "Công nghệ sản xuất tốt hơn",
+        "is_correct": true
+      }
+    ],
+    "created_at": "2026-10-31T20:46:33.260896"
+  },
+  {
+    "id": "q_a3506ff8",
+    "topic_id": "topic_4a34d900",
+    "content": "Chi phí biến đổi thường thay đổi theo yếu tố nào?",
+    "difficulty": "de",
+    "options": [
+      {
+        "id": "opt_6aa78af4",
+        "content": "Tên doanh nghiệp",
+        "is_correct": false
+      },
+      {
+        "id": "opt_269afcd9",
+        "content": "Số trang trong báo cáo",
+        "is_correct": false
+      },
+      {
+        "id": "opt_73f92df2",
+        "content": "Ngày thành lập doanh nghiệp",
+        "is_correct": false
+      },
+      {
+        "id": "opt_12224e5e",
+        "content": "Sản lượng sản xuất",
+        "is_correct": true
+      }
+    ],
+    "created_at": "2026-10-31T20:46:33.260936"
+  },
+  {
+    "id": "q_149ccd8c",
+    "topic_id": "topic_4a34d900",
+    "content": "Chi phí cố định trong ngắn hạn thường có đặc điểm nào?",
+    "difficulty": "de",
+    "options": [
+      {
+        "id": "opt_95dbe5f4",
+        "content": "Không đổi theo sản lượng trong phạm vi phù hợp",
+        "is_correct": true
+      },
+      {
+        "id": "opt_a3a8161e",
+        "content": "Tăng đúng bằng sản lượng",
+        "is_correct": false
+      },
+      {
+        "id": "opt_f77d3189",
+        "content": "Luôn bằng không",
+        "is_correct": false
+      },
+      {
+        "id": "opt_b2a9e5e0",
+        "content": "Chỉ xuất hiện khi doanh thu bằng không",
+        "is_correct": false
+      }
+    ],
+    "created_at": "2026-10-31T20:46:33.260959"
+  },
+  {
+    "id": "q_8daee0b3",
+    "topic_id": "topic_4a34d900",
+    "content": "Khi lợi ích cận biên lớn hơn chi phí cận biên, lựa chọn hợp lý thường là gì?",
+    "difficulty": "kho",
+    "options": [
+      {
+        "id": "opt_175b8f5c",
+        "content": "Dừng mọi hoạt động ngay",
+        "is_correct": false
+      },
+      {
+        "id": "opt_c9c8f1b8",
+        "content": "Bỏ qua cả lợi ích và chi phí",
+        "is_correct": false
+      },
+      {
+        "id": "opt_f2f11dca",
+        "content": "Giảm sản lượng về không",
+        "is_correct": false
+      },
+      {
+        "id": "opt_639103c7",
+        "content": "Tăng hoạt động thêm một đơn vị",
+        "is_correct": true
+      }
+    ],
+    "created_at": "2026-10-31T20:46:33.262305"
+  },
+  {
+    "id": "q_64904d06",
+    "topic_id": "topic_4a34d900",
+    "content": "Chi phí cơ hội của một lựa chọn là gì?",
+    "difficulty": "de",
+    "options": [
+      {
+        "id": "opt_7ea854a1",
+        "content": "Tổng doanh thu của mọi phương án",
+        "is_correct": false
+      },
+      {
+        "id": "opt_1854cec7",
+        "content": "Giá trị của phương án tốt nhất bị từ bỏ",
+        "is_correct": true
+      },
+      {
+        "id": "opt_c03310c5",
+        "content": "Mức giá thị trường thấp nhất",
+        "is_correct": false
+      },
+      {
+        "id": "opt_6674fea8",
+        "content": "Khoản tiền đã chi trong quá khứ",
+        "is_correct": false
+      }
+    ],
+    "created_at": "2026-10-31T20:46:33.262396"
   }
 ]
