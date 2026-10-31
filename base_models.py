@@ -464,7 +464,7 @@ class Grader(ABC):
 
 
 class ExamExporter(ABC):
-    """[D] Xuất đề & đáp án ra file văn bản (.txt, theo thống nhất với D)."""
+    """[D] Xuất đề và đáp án ra file JSON riêng biệt."""
 
     @abstractmethod
     def export_exam(self, exam: Exam, questions: list[Question], file_path: str) -> None:

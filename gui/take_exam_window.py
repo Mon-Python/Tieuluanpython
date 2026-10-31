@@ -1,52 +1,40 @@
 """
 gui/take_exam_window.py
 ========================
-[C sở hữu] Cửa sổ làm bài thi trắc nghiệm (Tkinter Toplevel).
-
-Chức năng:
-- Hiển thị bài thi theo danh sách câu hỏi và thứ tự phương án đã trộn (shuffled_options).
-- Cho phép điều hướng từng câu hoặc nhảy nhanh qua bảng câu hỏi bên phải.
-- Theo dõi tiến độ làm bài (câu đã làm / chưa làm).
-- Hộp thoại cảnh báo khi đóng cửa sổ giữa chừng (chưa nộp bài).
-- Xác nhận trước khi nộp bài (cảnh báo số câu chưa làm).
-- Chấm điểm tự động qua Grader, lưu kết quả qua ExamRepository (nếu có).
-- Chế độ xem lại bài thi (Review mode) sau khi nộp: hiện câu đúng/sai, đáp án đúng.
+Cửa sổ làm bài trắc nghiệm và xem lại kết quả bằng Tkinter.
 """
 
 import tkinter as tk
-from tkinter import ttk, messagebox
-from typing import Optional, Callable
+from tkinter import messagebox, ttk
+from typing import Callable, Optional
 
-from base_models import (
-    Exam, Question, Option, StudentAnswer, ExamResult, User,
+from base_models import Exam, ExamResult, Question, StudentAnswer, User
+from config import (
+    COLOR_ERROR,
+    COLOR_PRIMARY,
+    COLOR_SUCCESS,
+    FONT_BOLD,
+    FONT_NORMAL,
+    FONT_TITLE,
+    PADDING,
 )
 from grader import GraderImpl
-from config import (
-    FONT_NORMAL, FONT_BOLD, FONT_TITLE, PADDING,
-    COLOR_PRIMARY, COLOR_BG, COLOR_SUCCESS, COLOR_ERROR,
-)
 
 
 class TakeExamWindow(tk.Toplevel):
-    """
-    Cửa sổ làm bài thi.
+    """Cửa sổ hiển thị toàn bộ câu hỏi theo thứ tự từ trên xuống."""
 
-    Parameters:
-        parent       – widget cha
-        exam         – đối tượng Exam
-        data_repo    – JsonDataRepository (để lấy nội dung Question)
-        grader       – GraderImpl (chấm bài)
-        exam_repo    – ExamRepository (lưu kết quả, tùy chọn)
-        user         – User đang đăng nhập (lấy tên học sinh)
-        on_completed – callback(result: ExamResult) sau khi nộp và chấm điểm
-    """
-
-    def __init__(self, parent, exam: Exam, data_repo,
-                 grader: Optional[GraderImpl] = None,
-                 exam_repo=None,
-                 user: Optional[User] = None,
-                 on_completed: Optional[Callable[[ExamResult], None]] = None,
-                 **kwargs):
+    def __init__(
+        self,
+        parent,
+        exam: Exam,
+        data_repo,
+        grader: Optional[GraderImpl] = None,
+        exam_repo=None,
+        user: Optional[User] = None,
+        on_completed: Optional[Callable[[ExamResult], None]] = None,
+        **kwargs,
+    ):
         super().__init__(parent, **kwargs)
         self.exam = exam
         self.data_repo = data_repo
@@ -55,423 +43,374 @@ class TakeExamWindow(tk.Toplevel):
         self.user = user
         self.on_completed = on_completed
 
-        # Tải danh sách câu hỏi
         self.questions: list[Question] = []
         self._load_questions()
-
         if not self.questions:
-            messagebox.showerror("Lỗi", "Không tìm thấy dữ liệu câu hỏi cho đề thi này!")
+            messagebox.showerror(
+                "Lỗi", "Không tìm thấy dữ liệu câu hỏi cho đề thi này!",
+                parent=self,
+            )
             self.destroy()
             return
 
-        # Trạng thái bài làm
-        self.current_idx = 0
-        # {question_id: selected_option_id}
+        invalid_question = next(
+            (question for question in self.questions
+             if len(question.options) != 4),
+            None,
+        )
+        if invalid_question is not None:
+            messagebox.showerror(
+                "Lỗi",
+                f"Câu hỏi '{invalid_question.id}' không có đúng 4 phương án.",
+                parent=self,
+            )
+            self.destroy()
+            return
+
         self.selected_answers: dict[str, str] = {}
         self.is_submitted = False
         self.result: Optional[ExamResult] = None
+        self.question_widgets = {}
 
-        # Thiết lập cửa sổ
         self.title(f"Làm bài thi: {self.exam.title}")
-        self.geometry("900x650")
-        self.minsize(800, 550)
+        self.geometry("900x700")
+        self.minsize(700, 500)
         self.protocol("WM_DELETE_WINDOW", self._on_window_close)
 
-        # Xây dựng giao diện
         self._build_ui()
-        self._display_question(self.current_idx)
-
-    # ==============================================================
-    # KHỞI TẠO DỮ LIỆU
-    # ==============================================================
 
     def _load_questions(self):
-        """Tải các câu hỏi theo thứ tự question_ids trong đề."""
-        for qid in self.exam.question_ids:
-            q = self.data_repo.get_question(qid)
-            if q is not None:
-                self.questions.append(q)
-
-    # ==============================================================
-    # GIAO DIỆN CHÍNH
-    # ==============================================================
+        """Tải câu hỏi theo đúng thứ tự đã lưu trong đề."""
+        for question_id in self.exam.question_ids:
+            question = self.data_repo.get_question(question_id)
+            if question is not None:
+                self.questions.append(question)
 
     def _build_ui(self):
-        self.columnconfigure(0, weight=3)  # Vùng câu hỏi
-        self.columnconfigure(1, weight=1)  # Bảng điều hướng
-        self.rowconfigure(1, weight=1)
+        self.columnconfigure(0, weight=1)
+        self.rowconfigure(2, weight=1)
 
-        # 1. Header
-        header_frame = ttk.Frame(self, padding=PADDING)
-        header_frame.grid(row=0, column=0, columnspan=2, sticky="ew")
-
-        student_name = self.user.username if self.user and self.user.username else "Thí sinh"
-        lbl_exam_title = ttk.Label(
-            header_frame,
+        header = ttk.Frame(self, padding=PADDING)
+        header.grid(row=0, column=0, sticky="ew")
+        header.columnconfigure(0, weight=1)
+        ttk.Label(
+            header,
             text=f"Đề thi: {self.exam.title}",
             font=FONT_TITLE,
             foreground=COLOR_PRIMARY,
-        )
-        lbl_exam_title.pack(side="left")
+        ).grid(row=0, column=0, sticky="w")
 
-        self.lbl_info = ttk.Label(
-            header_frame,
+        student_name = (
+            self.user.username if self.user and self.user.username
+            else "Thí sinh"
+        )
+        ttk.Label(
+            header,
             text=f"Thí sinh: {student_name} | Số câu: {len(self.questions)}",
             font=FONT_BOLD,
+        ).grid(row=0, column=1, sticky="e", padx=(8, 0))
+        ttk.Button(
+            header, text="Thoát", command=self._on_window_close
+        ).grid(row=0, column=2, padx=(8, 0))
+
+        self.lbl_result = ttk.Label(
+            self,
+            text="",
+            font=FONT_BOLD,
+            justify=tk.LEFT,
+            wraplength=840,
+            takefocus=True,
         )
-        self.lbl_info.pack(side="right")
+        self.lbl_result.grid(
+            row=1, column=0, sticky="ew", padx=PADDING, pady=(0, PADDING)
+        )
 
-        # 2. Main Question Frame (Bên trái)
-        self.question_frame = ttk.LabelFrame(self, text="Nội dung câu hỏi", padding=PADDING * 2)
-        self.question_frame.grid(row=1, column=0, sticky="nsew", padx=PADDING, pady=PADDING)
-        self.question_frame.columnconfigure(0, weight=1)
-        self.question_frame.rowconfigure(1, weight=1)
+        content = ttk.Frame(self)
+        content.grid(
+            row=2, column=0, sticky="nsew", padx=PADDING, pady=(0, PADDING)
+        )
+        content.columnconfigure(0, weight=1)
+        content.rowconfigure(0, weight=1)
 
-        # Tiêu đề số thứ tự câu hỏi
-        self.lbl_q_number = ttk.Label(self.question_frame, text="", font=FONT_BOLD)
-        self.lbl_q_number.grid(row=0, column=0, sticky="w", pady=(0, 6))
+        self.question_canvas = tk.Canvas(
+            content,
+            highlightthickness=2,
+            highlightbackground="#64748b",
+            highlightcolor=COLOR_PRIMARY,
+            takefocus=True,
+        )
+        scrollbar = ttk.Scrollbar(
+            content, orient="vertical", command=self.question_canvas.yview
+        )
+        self.question_canvas.configure(yscrollcommand=scrollbar.set)
+        self.question_canvas.grid(row=0, column=0, sticky="nsew")
+        scrollbar.grid(row=0, column=1, sticky="ns")
+        for key in ("<Up>", "<Down>", "<Prior>", "<Next>"):
+            self.question_canvas.bind(key, self._scroll_questions)
 
-        # Nội dung câu hỏi
-        self.txt_q_content = tk.Text(
-            self.question_frame,
-            wrap="word",
-            height=5,
+        self.questions_frame = ttk.Frame(self.question_canvas)
+        self.questions_window = self.question_canvas.create_window(
+            (0, 0), window=self.questions_frame, anchor="nw"
+        )
+        self.question_canvas.bind("<Configure>", self._resize_question_content)
+        self.questions_frame.bind(
+            "<Configure>",
+            lambda _event: self.question_canvas.configure(
+                scrollregion=self.question_canvas.bbox("all")
+            ),
+        )
+
+        for index, question in enumerate(self.questions):
+            self._build_question(index, question)
+
+        footer = ttk.Frame(self, padding=PADDING)
+        footer.grid(row=3, column=0, sticky="ew")
+        footer.columnconfigure(0, weight=1)
+        self.lbl_progress = ttk.Label(
+            footer,
+            text=f"Đã làm: 0/{len(self.questions)} câu",
+            font=FONT_BOLD,
+        )
+        self.lbl_progress.grid(row=0, column=0, sticky="w")
+        self.btn_exit = ttk.Button(
+            footer, text="Thoát", command=self._on_window_close
+        )
+        self.btn_exit.grid(row=0, column=1, padx=(8, 0))
+        self.btn_submit = ttk.Button(
+            footer, text="Hoàn thành", command=self._confirm_submit
+        )
+        self.btn_submit.grid(row=0, column=2, padx=(8, 0))
+
+    def _build_question(self, index: int, question: Question):
+        card = ttk.LabelFrame(
+            self.questions_frame, text=f"Câu {index + 1}", padding=PADDING
+        )
+        card.pack(fill=tk.X, padx=4, pady=4)
+        card.columnconfigure(0, weight=1)
+
+        status = ttk.Label(card, text="Chưa trả lời", font=FONT_BOLD)
+        status.grid(row=0, column=0, sticky="w", pady=(0, 4))
+        content = ttk.Label(
+            card,
+            text=question.content,
             font=FONT_NORMAL,
-            relief="solid",
-            bd=1,
-            padx=8,
-            pady=8,
+            wraplength=720,
+            justify=tk.LEFT,
         )
-        self.txt_q_content.grid(row=1, column=0, sticky="nsew", pady=(0, 10))
-        self.txt_q_content.config(state="disabled")
+        content.grid(row=1, column=0, sticky="ew", pady=(0, 6))
 
-        # Khung chứa 4 phương án trắc nghiệm
-        self.options_frame = ttk.Frame(self.question_frame)
-        self.options_frame.grid(row=2, column=0, sticky="ew", pady=(0, 10))
-        self.options_frame.columnconfigure(0, weight=1)
+        option_by_id = {option.id: option for option in question.options}
+        ordered_ids = self.exam.shuffled_options.get(question.id, [])
+        seen_ids = set()
+        ordered_options = []
+        for option_id in ordered_ids:
+            option = option_by_id.get(option_id)
+            if option is not None and option_id not in seen_ids:
+                ordered_options.append(option)
+                seen_ids.add(option_id)
+        ordered_options.extend(
+            option for option in question.options if option.id not in seen_ids
+        )
 
-        self.opt_var = tk.StringVar(value="")
-        self.opt_radios: list[ttk.Radiobutton] = []
-        self.opt_labels: list[ttk.Label] = []
-
-        labels = ["A", "B", "C", "D"]
-        for i in range(4):
-            opt_row = ttk.Frame(self.options_frame)
-            opt_row.grid(row=i, column=0, sticky="w", pady=4)
+        answer_var = tk.StringVar(value="")
+        option_rows = []
+        for option_index, option in enumerate(ordered_options):
+            row = ttk.Frame(card)
+            row.grid(row=option_index + 2, column=0, sticky="ew", pady=2)
+            row.columnconfigure(0, weight=1)
 
             radio = ttk.Radiobutton(
-                opt_row,
-                text="",
-                value="",
-                variable=self.opt_var,
-                command=self._on_option_selected,
+                row,
+                text=f"{'ABCD'[option_index]}. {option.content}",
+                value=option.id,
+                variable=answer_var,
+                command=lambda qid=question.id, var=answer_var:
+                    self._on_option_selected(qid, var.get()),
             )
-            radio.pack(side="left")
-
-            lbl_feedback = ttk.Label(opt_row, text="", font=FONT_BOLD)
-            lbl_feedback.pack(side="left", padx=8)
-
-            self.opt_radios.append(radio)
-            self.opt_labels.append(lbl_feedback)
-
-        # Thanh điều hướng câu (Trước / Bỏ chọn / Tiếp theo)
-        nav_btns_frame = ttk.Frame(self.question_frame)
-        nav_btns_frame.grid(row=3, column=0, sticky="ew", pady=(10, 0))
-
-        self.btn_prev = ttk.Button(nav_btns_frame, text="◀ Câu trước", command=self._prev_question)
-        self.btn_prev.pack(side="left", padx=4)
-
-        self.btn_clear = ttk.Button(nav_btns_frame, text="Bỏ chọn", command=self._clear_selection)
-        self.btn_clear.pack(side="left", padx=4)
-
-        self.btn_next = ttk.Button(nav_btns_frame, text="Câu tiếp ▶", command=self._next_question)
-        self.btn_next.pack(side="left", padx=4)
-
-        # 3. Sidebar (Bên phải - Danh sách câu hỏi & Nộp bài)
-        sidebar_frame = ttk.LabelFrame(self, text="Tiến độ & Điều hướng", padding=PADDING)
-        sidebar_frame.grid(row=1, column=1, sticky="nsew", padx=(0, PADDING), pady=PADDING)
-        sidebar_frame.columnconfigure(0, weight=1)
-        sidebar_frame.rowconfigure(1, weight=1)
-
-        self.lbl_progress = ttk.Label(sidebar_frame, text="Đã làm: 0/0 câu", font=FONT_BOLD)
-        self.lbl_progress.grid(row=0, column=0, pady=(0, 8), sticky="w")
-
-        # Khung chứa các nút câu hỏi dạng lưới cuộn được
-        btn_canvas = tk.Canvas(sidebar_frame, highlightthickness=0)
-        scrollbar = ttk.Scrollbar(sidebar_frame, orient="vertical", command=btn_canvas.yview)
-        self.grid_frame = ttk.Frame(btn_canvas)
-
-        self.grid_frame.bind(
-            "<Configure>",
-            lambda e: btn_canvas.configure(scrollregion=btn_canvas.bbox("all")),
-        )
-        btn_canvas.create_window((0, 0), window=self.grid_frame, anchor="nw")
-        btn_canvas.configure(yscrollcommand=scrollbar.set)
-
-        btn_canvas.grid(row=1, column=0, sticky="nsew")
-        scrollbar.grid(row=1, column=1, sticky="ns")
-
-        # Tạo các nút số câu hỏi
-        self.q_buttons: list[tk.Button] = []
-        cols = 4
-        for idx in range(len(self.questions)):
-            r, c = divmod(idx, cols)
-            btn = tk.Button(
-                self.grid_frame,
-                text=str(idx + 1),
-                width=4,
-                relief="groove",
-                command=lambda i=idx: self._jump_to_question(i),
+            radio.bind(
+                "<FocusIn>",
+                lambda event: self._ensure_question_visible(event.widget),
             )
-            btn.grid(row=r, column=c, padx=3, pady=3)
-            self.q_buttons.append(btn)
+            radio.grid(row=0, column=0, sticky="w")
+            feedback = ttk.Label(row, text="", font=FONT_BOLD)
+            feedback.grid(row=0, column=1, sticky="e", padx=(8, 0))
+            option_rows.append((option, radio, feedback))
 
-        # Nút nộp bài
-        self.btn_submit = tk.Button(
-            sidebar_frame,
-            text="🏁 NỘP BÀI",
-            font=FONT_BOLD,
-            bg=COLOR_PRIMARY,
-            fg="white",
-            relief="raised",
-            pady=8,
-            command=self._confirm_submit,
+        self.question_widgets[question.id] = {
+            "status": status,
+            "content": content,
+            "answer_var": answer_var,
+            "options": option_rows,
+        }
+
+    def _resize_question_content(self, event):
+        self.question_canvas.itemconfigure(
+            self.questions_window, width=event.width
         )
-        self.btn_submit.grid(row=2, column=0, columnspan=2, sticky="ew", pady=(10, 0))
+        wraplength = max(200, event.width - 48)
+        for widgets in self.question_widgets.values():
+            widgets["content"].config(wraplength=wraplength)
 
-    # ==============================================================
-    # HIỂN THỊ CÂU HỎI
-    # ==============================================================
-
-    def _display_question(self, index: int):
-        """Hiển thị nội dung câu hỏi tại vị trí index."""
-        if not (0 <= index < len(self.questions)):
+    def _ensure_question_visible(self, widget):
+        self.question_canvas.update_idletasks()
+        region = self.question_canvas.bbox("all")
+        if region is None:
             return
 
-        self.current_idx = index
-        q = self.questions[index]
-
-        # Cập nhật số thứ tự và nội dung
-        self.lbl_q_number.config(
-            text=f"Câu {index + 1} / {len(self.questions)}  [Mức độ: {q.difficulty.value.upper()}]"
+        canvas_top = self.question_canvas.canvasy(0)
+        canvas_bottom = canvas_top + self.question_canvas.winfo_height()
+        widget_top = (
+            widget.winfo_rooty() - self.question_canvas.winfo_rooty()
+            + canvas_top
         )
-        self.txt_q_content.config(state="normal")
-        self.txt_q_content.delete("1.0", "end")
-        self.txt_q_content.insert("1.0", q.content)
-        self.txt_q_content.config(state="disabled")
+        widget_bottom = widget_top + widget.winfo_height()
+        if widget_top < canvas_top:
+            self.question_canvas.yview_moveto(widget_top / max(1, region[3]))
+        elif widget_bottom > canvas_bottom:
+            target_top = widget_bottom - self.question_canvas.winfo_height()
+            self.question_canvas.yview_moveto(target_top / max(1, region[3]))
 
-        # Lấy thứ tự phương án đã trộn từ exam.shuffled_options
-        shuffled_ids = self.exam.shuffled_options.get(q.id)
-        if not shuffled_ids:
-            shuffled_ids = [opt.id for opt in q.options]
+    def _scroll_questions(self, event):
+        if event.keysym == "Up":
+            self.question_canvas.yview_scroll(-1, "units")
+        elif event.keysym == "Down":
+            self.question_canvas.yview_scroll(1, "units")
+        elif event.keysym == "Prior":
+            self.question_canvas.yview_scroll(-1, "pages")
+        else:
+            self.question_canvas.yview_scroll(1, "pages")
+        return "break"
 
-        opt_by_id = {opt.id: opt for opt in q.options}
-        ordered_options = [opt_by_id[oid] for oid in shuffled_ids if oid in opt_by_id]
-
-        # Đặt lại Radiobuttons
-        self.opt_var.set(self.selected_answers.get(q.id, ""))
-
-        labels = ["A", "B", "C", "D"]
-        for i, opt in enumerate(ordered_options):
-            if i < len(self.opt_radios):
-                radio = self.opt_radios[i]
-                lbl_feedback = self.opt_labels[i]
-
-                radio.config(
-                    text=f"{labels[i]}.  {opt.content}",
-                    value=opt.id,
-                    state="disabled" if self.is_submitted else "normal",
-                )
-
-                # Chế độ xem lại (Review mode)
-                if self.is_submitted:
-                    if opt.is_correct:
-                        lbl_feedback.config(text="✓ Đáp án đúng", foreground=COLOR_SUCCESS)
-                    elif self.selected_answers.get(q.id) == opt.id:
-                        lbl_feedback.config(text="✗ Bạn đã chọn", foreground=COLOR_ERROR)
-                    else:
-                        lbl_feedback.config(text="")
-                else:
-                    lbl_feedback.config(text="")
-
-        # Cập nhật trạng thái các nút Trước / Tiếp
-        self.btn_prev.config(state="normal" if index > 0 else "disabled")
-        self.btn_next.config(state="normal" if index < len(self.questions) - 1 else "disabled")
-        if self.is_submitted:
-            self.btn_clear.config(state="disabled")
-
-        self._update_progress_and_buttons()
-
-    def _update_progress_and_buttons(self):
-        """Cập nhật màu sắc các nút ở bảng điều hướng và nhãn tiến độ."""
-        answered_count = len(self.selected_answers)
-        total = len(self.questions)
-        self.lbl_progress.config(text=f"Đã làm: {answered_count}/{total} câu")
-
-        for idx, btn in enumerate(self.q_buttons):
-            qid = self.questions[idx].id
-            is_answered = qid in self.selected_answers
-
-            if self.is_submitted:
-                # Nếu đã nộp bài: đúng xanh lá, sai đỏ, bỏ trống xám
-                q = self.questions[idx]
-                correct_id = q.correct_option_ids()[0] if q.correct_option_ids() else ""
-                chosen_id = self.selected_answers.get(qid, "")
-                if chosen_id == correct_id:
-                    btn.config(bg="#bbf7d0", fg="#166534")  # Xanh nhạt
-                else:
-                    btn.config(bg="#fecaca", fg="#991b1b")  # Đỏ nhạt
-            else:
-                if idx == self.current_idx:
-                    btn.config(relief="solid", bd=2)
-                else:
-                    btn.config(relief="groove", bd=1)
-
-                if is_answered:
-                    btn.config(bg="#dbeafe", fg="#1e40af")  # Đã làm: xanh dương
-                else:
-                    btn.config(bg="#f1f5f9", fg="#334155")  # Chưa làm: xám
-
-    # ==============================================================
-    # XỬ LÝ LỰA CHỌN ĐÁP ÁN & ĐIỀU HƯỚNG
-    # ==============================================================
-
-    def _on_option_selected(self):
-        """Lưu đáp án đã chọn cho câu hiện tại."""
+    def _on_option_selected(self, question_id: str, option_id: str):
         if self.is_submitted:
             return
-        qid = self.questions[self.current_idx].id
-        selected = self.opt_var.get()
-        if selected:
-            self.selected_answers[qid] = selected
-        self._update_progress_and_buttons()
-
-    def _clear_selection(self):
-        """Bỏ chọn đáp án cho câu hỏi hiện tại."""
-        if self.is_submitted:
-            return
-        qid = self.questions[self.current_idx].id
-        if qid in self.selected_answers:
-            del self.selected_answers[qid]
-        self.opt_var.set("")
-        self._update_progress_and_buttons()
-
-    def _prev_question(self):
-        if self.current_idx > 0:
-            self._display_question(self.current_idx - 1)
-
-    def _next_question(self):
-        if self.current_idx < len(self.questions) - 1:
-            self._display_question(self.current_idx + 1)
-
-    def _jump_to_question(self, index: int):
-        self._display_question(index)
-
-    # ==============================================================
-    # NỘP BÀI & CHẤM ĐIỂM
-    # ==============================================================
+        self.selected_answers[question_id] = option_id
+        self.lbl_progress.config(
+            text=f"Đã làm: {len(self.selected_answers)}/{len(self.questions)} câu"
+        )
 
     def _confirm_submit(self):
-        """Xác nhận trước khi nộp bài."""
         if self.is_submitted:
-            self.destroy()
             return
 
-        total = len(self.questions)
-        answered = len(self.selected_answers)
-        unanswered = total - answered
-
-        if unanswered > 0:
-            msg = (
-                f"Bạn còn {unanswered} câu chưa trả lời!\n\n"
-                "Bạn có chắc chắn muốn nộp bài ngay bây giờ không?"
+        unanswered = len(self.questions) - len(self.selected_answers)
+        if unanswered:
+            message = (
+                f"Bạn còn {unanswered} câu chưa trả lời.\n"
+                "Bạn có chắc chắn muốn hoàn thành bài kiểm tra không?"
             )
         else:
-            msg = "Bạn đã hoàn thành tất cả câu hỏi.\nBạn có chắc chắn muốn nộp bài không?"
-
-        if not messagebox.askyesno("Xác nhận nộp bài", msg, parent=self):
-            return
-
-        self._submit_and_grade()
-
-    def _submit_and_grade(self):
-        """Thu thập bài làm, gọi Grader chấm điểm và lưu kết quả."""
-        self.is_submitted = True
-
-        # Gom danh sách StudentAnswer
-        student_answers: list[StudentAnswer] = []
-        for q in self.questions:
-            chosen = self.selected_answers.get(q.id)
-            selected_ids = [chosen] if chosen else []
-            student_answers.append(
-                StudentAnswer(question_id=q.id, selected_option_ids=selected_ids)
+            message = (
+                "Bạn đã hoàn thành tất cả câu hỏi.\n"
+                "Bạn có chắc chắn muốn nộp bài không?"
             )
 
-        # Chấm bài qua Grader
-        self.result = self.grader.grade(self.exam, self.questions, student_answers)
-        student_name = self.user.username if self.user and self.user.username else "Thí sinh"
-        self.result.student_name = student_name
+        if messagebox.askyesno("Xác nhận hoàn thành", message, parent=self):
+            self._submit_and_grade()
 
-        # Lưu kết quả qua exam_repository nếu có
-        if self.exam_repo is not None:
+    def _submit_and_grade(self):
+        if self.is_submitted:
+            return
+
+        student_answers = [
+            StudentAnswer(
+                question_id=question.id,
+                selected_option_ids=(
+                    [self.selected_answers[question.id]]
+                    if question.id in self.selected_answers else []
+                ),
+            )
+            for question in self.questions
+        ]
+        result = self.grader.grade(self.exam, self.questions, student_answers)
+        result.student_name = (
+            self.user.username if self.user and self.user.username
+            else "Thí sinh"
+        )
+
+        if self.exam_repo is not None and hasattr(self.exam_repo, "save_result"):
             try:
-                if hasattr(self.exam_repo, "save_result"):
-                    self.exam_repo.save_result(self.result)
-            except Exception as e:
-                messagebox.showwarning("Lưu kết quả", f"Không thể lưu kết quả bài thi: {e}", parent=self)
+                self.exam_repo.save_result(result)
+            except (OSError, ValueError) as exc:
+                messagebox.showwarning(
+                    "Lưu kết quả",
+                    f"Không thể lưu kết quả bài thi: {exc}",
+                    parent=self,
+                )
 
-        # Thông báo callback
-        if self.on_completed:
-            try:
-                self.on_completed(self.result)
-            except Exception:
-                pass
+        self.result = result
+        self.is_submitted = True
+        self.btn_submit.config(state="disabled")
+        for index, question in enumerate(self.questions):
+            widgets = self.question_widgets[question.id]
+            is_correct = self._is_correct(question)
+            widgets["status"].config(
+                text=(
+                    f"Câu {index + 1} - {'ĐÚNG' if is_correct else 'SAI'}"
+                ),
+                foreground=COLOR_SUCCESS if is_correct else COLOR_ERROR,
+            )
+            for option, radio, feedback in widgets["options"]:
+                radio.config(state="disabled")
+                if option.is_correct:
+                    feedback.config(
+                        text="✓ Đáp án đúng", foreground=COLOR_SUCCESS
+                    )
+                elif self.selected_answers.get(question.id) == option.id:
+                    feedback.config(
+                        text="✗ Bạn đã chọn", foreground=COLOR_ERROR
+                    )
 
-        # Cập nhật giao diện sang chế độ xem lại
-        self.btn_submit.config(text="✕ ĐÓNG CỬA SỔ", bg="#64748b")
+        self.lbl_progress.config(
+            text=f"Đã hoàn thành: {len(self.questions)}/{len(self.questions)} câu"
+        )
         self._show_result_summary()
-        self._display_question(self.current_idx)
+
+        if self.on_completed is not None:
+            try:
+                self.on_completed(result)
+            except Exception as exc:
+                messagebox.showwarning(
+                    "Cập nhật thống kê",
+                    f"Không thể cập nhật thống kê sau khi nộp bài: {exc}",
+                    parent=self,
+                )
+
+    def _is_correct(self, question: Question) -> bool:
+        selected = self.selected_answers.get(question.id)
+        return bool(selected) and {selected} == set(question.correct_option_ids())
 
     def _show_result_summary(self):
-        """Hiện thông báo kết quả bài thi và thống kê theo chủ đề."""
-        if not self.result:
+        if self.result is None:
             return
 
         correct_count = sum(
-            1 for q in self.questions
-            if self.selected_answers.get(q.id) in q.correct_option_ids()
+            self._is_correct(question) for question in self.questions
         )
-        total = len(self.questions)
-
         stats_lines = []
-        for tid, data in self.result.topic_stats.items():
-            topic = self.data_repo.get_topic(tid)
-            topic_name = topic.name if topic else tid
+        for topic_id, data in self.result.topic_stats.items():
+            topic = self.data_repo.get_topic(topic_id)
+            topic_name = topic.name if topic else topic_id
             stats_lines.append(
-                f"- {topic_name}: {data['correct']}/{data['total']} câu ({data['percent']}%)"
+                f"• {topic_name}: {data['correct']}/{data['total']} câu "
+                f"({data['percent']}%)"
             )
-
-        detail_text = (
-            f"Điểm số: {self.result.score} / 10\n"
-            f"Số câu đúng: {correct_count} / {total}\n\n"
-            "Thống kê theo chủ đề:\n" + "\n".join(stats_lines) + "\n\n"
-            "Bạn có thể xem lại từng câu hỏi để đối chiếu đáp án đúng."
+        summary = (
+            f"Kết quả: {self.result.score}/10 | "
+            f"Số câu đúng: {correct_count}/{len(self.questions)}"
         )
-
-        messagebox.showinfo("Kết quả thi", detail_text, parent=self)
-
-    # ==============================================================
-    # ĐÓNG CỬA SỔ
-    # ==============================================================
+        if stats_lines:
+            summary += "\n" + "\n".join(stats_lines)
+        self.lbl_result.config(text=summary, foreground=COLOR_PRIMARY)
+        self.lbl_result.focus_set()
 
     def _on_window_close(self):
-        """Cảnh báo khi người dùng đóng cửa sổ giữa chừng chưa nộp bài."""
-        if not self.is_submitted:
-            if not messagebox.askyesno(
-                "Cảnh báo",
-                "Bài làm chưa được nộp!\nNếu bạn thoát bây giờ, kết quả sẽ không được lưu.\n\n"
-                "Bạn có chắc chắn muốn thoát không?",
-                parent=self,
-            ):
-                return
+        """Yêu cầu xác nhận khi thoát trước khi nộp bài."""
+        if not self.is_submitted and not messagebox.askyesno(
+            "Thoát bài kiểm tra",
+            "Bài làm chưa được hoàn thành và kết quả sẽ không được lưu.\n"
+            "Bạn có chắc chắn muốn thoát không?",
+            parent=self,
+        ):
+            return
         self.destroy()

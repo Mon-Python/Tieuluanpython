@@ -1,0 +1,71 @@
+[
+  {
+    "id": "result_cb33a40c",
+    "exam_id": "exam_8d4255bc",
+    "student_name": "hocsinh1",
+    "answers": [
+      {
+        "question_id": "q_d96ab61c",
+        "selected_option_ids": [
+          "opt_752a72e2"
+        ]
+      },
+      {
+        "question_id": "q_98e86d0f",
+        "selected_option_ids": [
+          "opt_9d983c53"
+        ]
+      },
+      {
+        "question_id": "q_1a07802a",
+        "selected_option_ids": [
+          "opt_56233c97"
+        ]
+      },
+      {
+        "question_id": "q_1f1fa12a",
+        "selected_option_ids": [
+          "opt_8bbb1bcb"
+        ]
+      },
+      {
+        "question_id": "q_6db5b8fe",
+        "selected_option_ids": [
+          "opt_99e2172d"
+        ]
+      },
+      {
+        "question_id": "q_25f451d8",
+        "selected_option_ids": [
+          "opt_63c23d0f"
+        ]
+      },
+      {
+        "question_id": "q_adc3d9cd",
+        "selected_option_ids": [
+          "opt_22b6e192"
+        ]
+      },
+      {
+        "question_id": "q_edb11e88",
+        "selected_option_ids": [
+          "opt_41cb621c"
+        ]
+      }
+    ],
+    "score": 5.0,
+    "topic_stats": {
+      "topic_4b72db2e": {
+        "correct": 2,
+        "total": 4,
+        "percent": 50.0
+      },
+      "topic_91114da8": {
+        "correct": 2,
+        "total": 4,
+        "percent": 50.0
+      }
+    },
+    "created_at": "2026-10-31T20:03:43.022756"
+  }
+]

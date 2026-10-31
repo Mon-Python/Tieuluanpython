@@ -1,0 +1,132 @@
+[
+  {
+    "id": "exam_8d4255bc",
+    "subject_id": "subj_e031b52f",
+    "title": "Lập trình Python - Dễ",
+    "seed": 466501,
+    "question_ids": [
+      "q_d96ab61c",
+      "q_98e86d0f",
+      "q_1a07802a",
+      "q_1f1fa12a",
+      "q_6db5b8fe",
+      "q_25f451d8",
+      "q_adc3d9cd",
+      "q_edb11e88"
+    ],
+    "shuffled_options": {
+      "q_d96ab61c": [
+        "opt_752a72e2",
+        "opt_a444f2f5",
+        "opt_d3181552",
+        "opt_d5fff7ce"
+      ],
+      "q_98e86d0f": [
+        "opt_9c5f630f",
+        "opt_bf90e691",
+        "opt_6824a6db",
+        "opt_9d983c53"
+      ],
+      "q_1a07802a": [
+        "opt_56233c97",
+        "opt_f472bee4",
+        "opt_4770cd3d",
+        "opt_1e037aed"
+      ],
+      "q_1f1fa12a": [
+        "opt_8bbb1bcb",
+        "opt_d42ef297",
+        "opt_c6df4754",
+        "opt_0f9dcb4f"
+      ],
+      "q_6db5b8fe": [
+        "opt_99e2172d",
+        "opt_f528b422",
+        "opt_1b7802d4",
+        "opt_8a3bd78e"
+      ],
+      "q_25f451d8": [
+        "opt_63c23d0f",
+        "opt_69303a28",
+        "opt_4e6362a8",
+        "opt_692836f6"
+      ],
+      "q_adc3d9cd": [
+        "opt_22b6e192",
+        "opt_a1cfe971",
+        "opt_905219a2",
+        "opt_14c8c9e6"
+      ],
+      "q_edb11e88": [
+        "opt_8e161b68",
+        "opt_41cb621c",
+        "opt_24ccdbaa",
+        "opt_fc201fc2"
+      ]
+    },
+    "matrix": [
+      {
+        "topic_id": "topic_91114da8",
+        "difficulty": "de",
+        "num_questions": 4
+      },
+      {
+        "topic_id": "topic_4b72db2e",
+        "difficulty": "de",
+        "num_questions": 4
+      }
+    ],
+    "created_at": "2026-10-31T20:03:20.707507"
+  },
+  {
+    "id": "exam_db8f9eff",
+    "subject_id": "subj_e031b52f",
+    "title": "Lập trình Python - Khó",
+    "seed": 395191,
+    "question_ids": [
+      "q_fdabbe5e",
+      "q_ad09c08f",
+      "q_33f9767f",
+      "q_2cfce5ee"
+    ],
+    "shuffled_options": {
+      "q_fdabbe5e": [
+        "opt_f5743456",
+        "opt_efae2319",
+        "opt_e0145355",
+        "opt_4cf83339"
+      ],
+      "q_ad09c08f": [
+        "opt_285093c6",
+        "opt_99d0c5cb",
+        "opt_acd1ec6b",
+        "opt_8deedaa9"
+      ],
+      "q_33f9767f": [
+        "opt_f6bb83e9",
+        "opt_414f3e7f",
+        "opt_df700951",
+        "opt_0fa9f3bf"
+      ],
+      "q_2cfce5ee": [
+        "opt_2eb7630a",
+        "opt_85fe40d7",
+        "opt_2240f4d7",
+        "opt_08b3fb09"
+      ]
+    },
+    "matrix": [
+      {
+        "topic_id": "topic_91114da8",
+        "difficulty": "kho",
+        "num_questions": 2
+      },
+      {
+        "topic_id": "topic_4b72db2e",
+        "difficulty": "kho",
+        "num_questions": 2
+      }
+    ],
+    "created_at": "2026-10-31T20:03:49.817110"
+  }
+]

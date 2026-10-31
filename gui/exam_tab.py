@@ -5,7 +5,7 @@ gui/exam_tab.py
 
 Quản trị viên: form tạo đề (chọn môn, nhập ma trận theo chủ đề × mức độ,
                nhập seed, đặt tên), Treeview ma trận, nút Tạo đề / Tái lập / Xuất.
-Người dùng thường: chỉ thấy danh sách đề và nút Làm bài.
+Người dùng thường: chọn môn, mức độ và bắt đầu bài kiểm tra.
 """
 
 import random
@@ -80,6 +80,17 @@ class ExamTab(ttk.Frame):
             self._frame_create.columnconfigure(1, weight=1)
             row += 1
             self._build_create_form(self._frame_create)
+
+        if self.user.can("take_exam") and not self.user.can("create_exam"):
+            self._frame_student_exam = ttk.LabelFrame(
+                self, text="Làm bài kiểm tra", padding=PADDING
+            )
+            self._frame_student_exam.grid(
+                row=row, column=0, sticky="ew", padx=PADDING, pady=4
+            )
+            self._frame_student_exam.columnconfigure(1, weight=1)
+            self._build_student_exam_form(self._frame_student_exam)
+            row += 1
 
         # ---------- Danh sách đề ----------
         frame_list = ttk.LabelFrame(self, text="Danh sách đề đã tạo",
@@ -181,6 +192,33 @@ class ExamTab(ttk.Frame):
             ttk.Button(frame_btn, text="📄 Xuất đề",
                        command=self._do_export).pack(side="left", padx=4)
 
+    def _build_student_exam_form(self, parent):
+        subject_group = ttk.LabelFrame(
+            parent, text="Môn học", padding=(6, 2)
+        )
+        subject_group.grid(row=0, column=0, sticky="ew", padx=(0, 8))
+        subject_group.columnconfigure(0, weight=1)
+        self.cmb_student_subject = ttk.Combobox(
+            subject_group, state="readonly", font=FONT_NORMAL
+        )
+        self.cmb_student_subject.grid(row=0, column=0, sticky="ew")
+
+        difficulty_group = ttk.LabelFrame(
+            parent, text="Mức độ", padding=(6, 2)
+        )
+        difficulty_group.grid(row=0, column=1, sticky="ew", padx=(0, 8))
+        difficulty_group.columnconfigure(0, weight=1)
+        self.cmb_student_difficulty = ttk.Combobox(
+            difficulty_group, state="readonly", font=FONT_NORMAL,
+            values=["Dễ", "Khó"],
+        )
+        self.cmb_student_difficulty.current(0)
+        self.cmb_student_difficulty.grid(row=0, column=0, sticky="ew")
+
+        ttk.Button(
+            parent, text="Làm bài", command=self._do_student_exam
+        ).grid(row=0, column=2, sticky="ns", padx=4)
+
     # ---------- Danh sách đề ----------
 
     def _build_exam_list(self, parent):
@@ -224,13 +262,16 @@ class ExamTab(ttk.Frame):
         """Cập nhật combobox Môn học."""
         self._subjects = self.data_repo.list_subjects()
         self._summary = self.data_repo.get_question_bank_summary()
-        if not hasattr(self, "cmb_subject"):
-            return
         names = [s.name for s in self._subjects]
-        self.cmb_subject["values"] = names
-        if names:
-            self.cmb_subject.current(0)
-            self._on_subject_changed()
+        if hasattr(self, "cmb_subject"):
+            self.cmb_subject["values"] = names
+            if names:
+                self.cmb_subject.current(0)
+                self._on_subject_changed()
+        if hasattr(self, "cmb_student_subject"):
+            self.cmb_student_subject["values"] = names
+            if names:
+                self.cmb_student_subject.current(0)
 
     def _on_subject_changed(self, event=None):
         """Khi chọn môn → cập nhật combobox Chủ đề."""
@@ -283,6 +324,63 @@ class ExamTab(ttk.Frame):
     def _random_seed(self):
         self.ent_seed.delete(0, "end")
         self.ent_seed.insert(0, str(random.randint(1, 999_999)))
+
+    def _do_student_exam(self):
+        """Create a test from every available question at the selected level."""
+        subject_idx = self.cmb_student_subject.current()
+        if subject_idx < 0 or subject_idx >= len(self._subjects):
+            messagebox.showwarning("Thiếu môn học", "Vui lòng chọn môn học.")
+            return
+
+        difficulty = {
+            "Dễ": DifficultyLevel.DE,
+            "Khó": DifficultyLevel.KHO,
+        }.get(self.cmb_student_difficulty.get())
+        if difficulty is None:
+            messagebox.showwarning("Thiếu mức độ", "Vui lòng chọn mức độ.")
+            return
+
+        subject = self._subjects[subject_idx]
+        matrix = []
+        for topic in self.data_repo.list_topics(subject.id):
+            available = self.data_repo.count_questions(topic.id, difficulty)
+            if available:
+                matrix.append(ExamMatrixItem(
+                    topic_id=topic.id,
+                    difficulty=difficulty,
+                    num_questions=available,
+                ))
+
+        if not matrix:
+            messagebox.showwarning(
+                "Chưa có câu hỏi",
+                f"Môn học '{subject.name}' chưa có câu hỏi ở mức độ "
+                f"{self.cmb_student_difficulty.get().lower()}.",
+            )
+            return
+
+        seed = random.randint(1, 999_999)
+        difficulty_name = self.cmb_student_difficulty.get()
+        title = f"{subject.name} - {difficulty_name}"
+        try:
+            exam = self.exam_gen.generate_exam(
+                subject_id=subject.id,
+                title=title,
+                matrix=matrix,
+                seed=seed,
+            )
+            if self.exam_repo is not None:
+                self.exam_repo.save_exam(exam)
+        except ValueError as exc:
+            messagebox.showerror("Không thể tạo bài kiểm tra", str(exc))
+            return
+        except OSError as exc:
+            messagebox.showerror("Không thể lưu bài kiểm tra", str(exc))
+            return
+
+        self._refresh_exam_list()
+        if self.on_take_exam is not None:
+            self.on_take_exam(exam)
 
     def _add_matrix_row(self):
         """Thêm 1 dòng vào ma trận đề."""
@@ -428,8 +526,8 @@ class ExamTab(ttk.Frame):
         from config import EXPORT_DIR
         EXPORT_DIR.mkdir(parents=True, exist_ok=True)
 
-        exam_path = str(EXPORT_DIR / f"{exam.id}_de.txt")
-        key_path = str(EXPORT_DIR / f"{exam.id}_dapan.txt")
+        exam_path = str(EXPORT_DIR / f"{exam.id}_de.json")
+        key_path = str(EXPORT_DIR / f"{exam.id}_dapan.json")
 
         try:
             self.exam_exporter.export_exam(exam, questions, exam_path)

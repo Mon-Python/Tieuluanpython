@@ -1,0 +1,38 @@
+[
+  {
+    "id": "user_d7f9f159",
+    "username": "admin",
+    "password_hash": "50a4fa40f07a4883f19d8d3ad39e4776b8f9954a32229a7a1241cf766854819e",
+    "salt": "fc38e7b1eb044c875a1ed50bebc6dc0b",
+    "role": "admin",
+    "email": "admin@school.edu.vn",
+    "created_at": "2026-10-31T14:49:32.708946"
+  },
+  {
+    "id": "user_243c7f1b",
+    "username": "student",
+    "password_hash": "77ef23d4433abea499bcd86c81d4bc2da5f59fbed4b6a87f197a986f38a27e69",
+    "salt": "28d7228e6cde01108b9f0bb64f33a013",
+    "role": "user",
+    "email": "student@school.edu.vn",
+    "created_at": "2026-10-31T14:49:32.735129"
+  },
+  {
+    "id": "user_7631bc16",
+    "username": "hocsinh1",
+    "password_hash": "0fa978371de18961aa785dd6142afc78890e10d54b666fb3a9935fc0150a0ba7",
+    "salt": "047761496be348463e483af544393724",
+    "role": "user",
+    "email": "",
+    "created_at": "2026-10-31T16:53:45.354360"
+  },
+  {
+    "id": "user_8e1a6fb0",
+    "username": "hocsinh2",
+    "password_hash": "1ffd4f0131204b495ce4cabb4a66c890a28da6033c47306307a42d0b818fed9c",
+    "salt": "799bbe1ad1158cb0446b0c71f7849189",
+    "role": "user",
+    "email": "",
+    "created_at": "2026-10-31T20:04:30.811645"
+  }
+]
